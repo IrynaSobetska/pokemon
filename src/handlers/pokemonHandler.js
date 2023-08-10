@@ -2,20 +2,27 @@ import data from '../data.js';
 import dom from '../dom.js';
 import getPokemon from '../../apis/getPokemon.js';
 import createPokemon from '../components/createPokemon.js';
+import changePokemon from '../components/changePokemon.js';
 
 const pokemonHandler = async () => {
     const id = Number(dom.input.value);
+
+    const containerExist = document.getElementById('container');
 
     // check if id is already in use
     if (data.previousId === id) {
         return;
     }
 
+    data.previousId = id;
+
     // check if input is correct
     if (id < 1 || Number.isNaN(id)) {
         dom.root.innerHTML = '';
         dom.input.value = '';
 
+        const div = document.createElement('div');
+        div.id = 'err';
         const text = document.createElement('p');
         text.classList = 'warning';
         text.innerText = "Pokemon id can't be text or less then 1";
@@ -27,17 +34,18 @@ const pokemonHandler = async () => {
     const pokemon = await getPokemon(id);
     let pokemonDom;
 
-    const pokemonElementExists = document.getElementById(pokemonDom);
+    if (!containerExist) {
+        if (errExist) {
+            dom.root.innerHTML = '';
+        }
 
-    if (!pokemonElementExists) {
-        dom.root.innerHTML = '';
+        pokemonDom = createPokemon(pokemon);
+        dom.root.append(pokemonDom);
+    } else {
+        changePokemon(containerExist, pokemon);
     }
 
-    pokemonDom = createPokemon(pokemon);
-    dom.root.append(pokemonDom);
     dom.input.value = '';
-
-    data.previousId = id;
 };
 
 export default pokemonHandler;
