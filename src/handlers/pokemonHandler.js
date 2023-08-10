@@ -4,18 +4,15 @@ import getPokemon from '../../apis/getPokemon.js';
 import createPokemon from '../components/createPokemon.js';
 
 const pokemonHandler = async () => {
-    const id = dom.input.value;
+    const id = Number(dom.input.value);
 
     // check if id is already in use
     if (data.previousId === id) {
-        dom.input.value = '';
         return;
     }
 
-    data.previousId = id;
-
     // check if input is correct
-    if (id < 1 || isNaN(id)) {
+    if (id < 1 || Number.isNaN(id)) {
         dom.root.innerHTML = '';
         dom.input.value = '';
 
@@ -27,23 +24,20 @@ const pokemonHandler = async () => {
     }
 
     // create container
-    try {
-        const pokemon = await getPokemon(id);
-        let pokemonDom;
+    const pokemon = await getPokemon(id);
+    let pokemonDom;
 
-        const pokemonElementExists =
-            document.getElementById(pokemonDom) !== null;
+    const pokemonElementExists = document.getElementById(pokemonDom);
 
-        if (!pokemonElementExists) {
-            dom.root.innerHTML = '';
-        }
-
-        pokemonDom = createPokemon(pokemon);
-        dom.root.append(pokemonDom);
-        dom.input.value = '';
-    } catch (err) {
-        console.error(err);
+    if (!pokemonElementExists) {
+        dom.root.innerHTML = '';
     }
+
+    pokemonDom = createPokemon(pokemon);
+    dom.root.append(pokemonDom);
+    dom.input.value = '';
+
+    data.previousId = id;
 };
 
 export default pokemonHandler;
