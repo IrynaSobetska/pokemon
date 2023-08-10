@@ -18,7 +18,9 @@ const pokemonHandler = async () => {
 
     // check if input is correct
     if (id < 1 || Number.isNaN(id)) {
-        dom.root.innerHTML = '';
+        if (containerExist) {
+            containerExist.remove();
+        }
         dom.input.value = '';
 
         const div = document.createElement('div');
@@ -26,9 +28,12 @@ const pokemonHandler = async () => {
         const text = document.createElement('p');
         text.classList = 'warning';
         text.innerText = "Pokemon id can't be text or less then 1";
+        div.append(text);
 
-        return dom.root.append(text);
+        return dom.root.append(div);
     }
+
+    const errExist = document.getElementById('err');
 
     // create container
     const pokemon = await getPokemon(id);
@@ -36,7 +41,7 @@ const pokemonHandler = async () => {
 
     if (!containerExist) {
         if (errExist) {
-            dom.root.innerHTML = '';
+            errExist.remove();
         }
 
         pokemonDom = createPokemon(pokemon);
