@@ -8,6 +8,7 @@ const pokemonHandler = async () => {
     const id = Number(dom.input.value);
 
     const containerExist = document.getElementById('container');
+    const errExist = document.getElementById('err');
 
     // check if id is already in use
     if (data.previousId === id) {
@@ -21,6 +22,9 @@ const pokemonHandler = async () => {
         if (containerExist) {
             containerExist.remove();
         }
+        if (errExist) {
+            return;
+        }
         dom.input.value = '';
 
         const div = document.createElement('div');
@@ -32,8 +36,6 @@ const pokemonHandler = async () => {
 
         return dom.root.append(div);
     }
-
-    const errExist = document.getElementById('err');
 
     // create container
     const pokemon = await getPokemon(id);
